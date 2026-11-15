@@ -44,7 +44,8 @@ git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
 
 # synchronize the repository with your local history
-git push -u origin main
+git push -u origin main # The -u origin main part is necessary when the branch does not yet exist in the remote. It lets git know that
+                        # from now on, origin/main
 ```
 
 The last step might fail if you don't have set up an ssh key. Alternatively, you can use Visual Studio Code's Github authentication to log into Github and authorize the push.
@@ -196,7 +197,11 @@ The result is:
 
 <img src="./images/commits6.png" width="70%">
 
+## Forking
 
+If you are not an owner or do not have editing privileges on the github repository, but you want to contribute to it, you have to option to **fork** the repository. This is a feature that is also possible in other repository websites, such as GitLab.
+
+Forking copies the entirety of someone's repository and lets you own the copy. You can change that copy however you like. To contribute to the original, create a branch in your copy (feature1, for example), and then open a pull request in the main branch of the original repository that will bring your feature1 branch in. The owners will review the changes and accept or reject them.
 
 
 
