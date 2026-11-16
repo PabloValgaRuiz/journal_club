@@ -10,8 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # export compile commands for tools like clangd, optional
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# equivalent to -I, let's the compiler know where to look for headers
-include_directories(src)
-
-# this is what we want to compile into an executable
+# this is what we want to compile into an executable. hellow_world is now a "target" that we can refer to in other commands
 add_executable(hello_world src/main.cpp)
+
+# equivalent to -I, let's the compiler know where to look for headers
+target_include_directories(hello_world PRIVATE src)
