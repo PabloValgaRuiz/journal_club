@@ -206,7 +206,7 @@ Forking copies the entirety of someone's repository and lets you own the copy. Y
 
 # 2. CMAKE STEP BY STEP
 
-CMake lets you move away from long terminal comminds for compiling and dependency headaches. This makes code difficult to reproduce. While this is okay for a simple test program:
+CMake lets you move away from long terminal commands for compiling and dependency headaches. This makes code difficult to reproduce. While this is okay for a simple test program:
 
 ```bash
 g++ main.cpp random.cpp -o main -O3 -I libraries/
@@ -272,11 +272,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # export compile commands for tools like clangd, optional
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# equivalent to -I, let's the compiler know where to look for headers
-include_directories(src)
-
 # this is what we want to compile into an executable
 add_executable(hello_world src/main.cpp)
+
+# equivalent to -I, lets the compiler know where to look for headers
+target_include_directories(hello_world PRIVATE src)
 ```
 
 Now, to build, ALWAYS create a build/ folder so all the files that CMake creates are kept in one place and keep that location from being synchronized by git, through the .gitignore file.
@@ -361,7 +361,7 @@ target_include_directories(random PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include) # 
 This should take care of all the complexity of compiling the random library and functions, while on our main CMakeLists.txt we only need to add the following:
 
 ```cmake
-add_subdirectory(random_library) # the directory where the library (and it's CMakeLists.txt) is located
+add_subdirectory(random_library) # the directory where the library (and its CMakeLists.txt) is located
 target_link_libraries(hello_world PRIVATE random) # just link against it.
 ```
 
