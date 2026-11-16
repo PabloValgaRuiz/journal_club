@@ -204,7 +204,93 @@ If you are not an owner or do not have editing privileges on the github reposito
 Forking copies the entirety of someone's repository and lets you own the copy. You can change that copy however you like. To contribute to the original, create a branch in your copy (feature1, for example), and then open a pull request in the main branch of the original repository that will bring your feature1 branch in. The owners will review the changes and accept or reject them.
 
 
+# CMAKE STEP BY STEP
 
+CMake lets you move away from long terminal comminds for compiling and dependency headaches. This makes code difficult to reproduce. While this is okay for a simple test program:
 
+```bash
+g++ main.cpp random.cpp -o main -O3 -I libraries/
+```
 
+As you add more and more libraries, it will become a headache.
+
+```bash
+# Dear referee. This is how you build the code for reproducibility
+
+# Make sure you have installed g++, git, GSL, OpenMP and eigen and substitute the paths with your own.
+
+git clone https://github.com/PromisingScientist/ArticleCodeFinalv4final2.git
+cd ArticleCodeFinalv4final2
+
+g++-14 -std=c++17 -O3 -DNDEBUG -Wall -Wextra -I libraries/ -I /path/to/eigen-3.4.0 \
+    -I /opt/homebrew/opt/gsl/include src/main.cpp src/solver.cpp -L /opt/homebrew/opt/gsl/lib \
+    -lgsl -lgslcblas -lm -o simulation
+    
+
+./simulation
+
+# good luck <3
+```
+
+This is hard to reproduce because every person will have to download or even build all the libraries on their own and link their paths, which are different for every person or OS. **The referees are going to be in a bad mood while reviewing your paper**.
+
+Additionally, every time you make a change in your code everything will need to be recompiled, including all the external library code you use (for example, about 50000 lines of Eigen).
+
+## What is CMake
+
+CMake is not a compiler, but a program that will generate a set of instructions to call the compiler and build your code. All these instructions are inside files called "CMakeLists.txt" that other users shouldn't care about. All they need to do should look something like this:  
+
+```bash
+
+# Dear referee. This is how you build the code for reproducibility
+# Make sure your system has installed git, cmake and GSL
+
+git clone https://github.com/PromisingScientist/CleanCodebase.git
+cd CleanCodebase/build/
+cmake ..
+cmake --build .
+
+./simulation
+
+```
+You can even create a script that runs some of these commands with whatever flags you choose.
+
+## Bare minimum for getting a program to run
+
+Suppose you have a simple program to compile, that consists of a main.cpp file and a header.
+
+```cmake
+cmake_minimum_required(VERSION 3.10)
+
+# name the project
+# this will be used as the target name for the executable
+project(HelloWorld)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# export compile commands for tools like clangd, optional
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# equivalent to -I, let's the compiler know where to look for headers
+include_directories(src)
+
+# this is what we want to compile into an executable
+add_executable(hello_world src/main.cpp)
+```
+
+Now, to build, ALWAYS create a build/ folder so all the files that CMake creates are kept in one place and keep that location from being synchronized by git, through the .gitignore file.
+
+```bash
+cmake .. # Runs the CMake code, sets up all the helper files and configurations, looks for libraries, sources, etc
+cmake --build . # Actually compiles the program 
+
+./hello_world
+```
+
+These are the minimal steps. CMake also supports standard configurations for Debug and Release modes, you may add a flag either on the first or second step, depending on what works with your compiler.
+```bash
+cmake .. -DCMAKE_BUILD_TYPE=Release # including the release flag here works for gcc or clang and compilers that support only one configuration per build
+cmake --build . --config Release -j # this flag works for compilers that support multiple configurations like visual studio or xcode.
+```
 

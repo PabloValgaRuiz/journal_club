@@ -10,11 +10,5 @@ int main() {
     std::cout << "Random number: " << getRandomInt(1, 100) << std::endl;
     std::cout << "Random number: " << getRandomInt(1, 100) << std::endl;
 
-    // std::cout << "Random number (header): " << headerGetRandomInt(1, 100) << std::endl;
-    // std::cout << "Random number (header): " << headerGetRandomInt(1, 100) << std::endl;
-    // std::cout << "Random number (header): " << headerGetRandomInt(1, 100) << std::endl;
-
-    main2();
-
     return 0;
 }
