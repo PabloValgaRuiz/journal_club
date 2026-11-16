@@ -407,7 +407,7 @@ The way we do it is through the function find_package(). This function is INCRED
 ```cmake
 find_package(GSL REQUIRED)
 
-target_link_libraries(simulation PRIVATE GSL::gsl GSL::gslcblas)
+target_link_libraries(hello_world PRIVATE GSL::gsl GSL::gslcblas)
 ```
 
 It's that simple!! The example code can be found in cmake-examples/example5

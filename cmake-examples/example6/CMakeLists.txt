@@ -35,4 +35,5 @@ target_link_libraries(hello_world PRIVATE
     random 
     fmt::fmt 
     GSL::gsl
+    GSL::gslcblas
 )

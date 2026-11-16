@@ -18,4 +18,4 @@ add_executable(hello_world src/main.cpp)
 
 find_package(GSL REQUIRED)
 
-target_link_libraries(hello_world PRIVATE GSL::gsl)
+target_link_libraries(hello_world PRIVATE GSL::gsl GSL::gslcblas)
