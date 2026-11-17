@@ -81,6 +81,9 @@ git commit -m "second commit"
 
 git add .
 git commit -m "third commit"
+
+
+git push # send the changes to the remote so collaborators can see them
 ```
 
 <img src="./images/commits1.png" width="60%">
@@ -138,6 +141,12 @@ Now both remote and local have two commits: "Commit A" and "Update README".
 
 Every person working in parallel for large codebases should create a new branch for each big feature, instead of directly working and committing changes to the main branch.
 
+Here is an examplo of dealing with a conflict when two people implement changes at the same time. This is the file README.md in the main branch, let's say we are in the commit "Commit A".
+
+<img src="./images/readme1.png" width="40%">
+
+Imagine it's a program that declares a variable and uses it in a function. Now you want to add some functionality using that variable in a second function.
+
 First, create your branch.
 
 ```bash
@@ -152,16 +161,33 @@ git commit -m "commit f1"
 
 git add .
 git commit -m "commit f2"
+
+# if you want to publish the branch for others to see or modify, push it
+
+git push origin feature1 # again, the "origin feature1" is only needed the first time you publish the branch. After this, "git push" is enough
 ```
+
+Now this is what your code looks like in your commit "commit f2"
+
+<img src="./images/readme3.png" width="40%">
+
+However, while you made these changes, someone else updated the main branch with a commit "Commit B". This is what the main branch looks like now:
+
+<img src="./images/readme2.png" width="40%">
+
+They have changed the name of the variable that you're using! Furthermore, they don't see your changes and you don't see theirs.
+
 
 <img src="./images/commits4.png" width="60%">
 
-Someone else has made changes to main while we were working on our branch. We need to include these changes into our feature1 branch, to make sure things don't break.
+This is the state of the git history up until now. Your job is to incorporate your changes into the main branch without breaking the code for everybody. So, the first thing will be to incorporate the updates in main into your own branch.
 
 ```bash
+git checkout main # got to the main branch
+
 git pull # get information about the remote repository (and other people's changes) and update your
          # branch to its latest commit from remote, if there are any changes
-git checkout feature1 # only necessary if you weren't in your branch
+git checkout feature1 # go back to your own branch
 
 git merge origin/main # this does NOT change origin/main. it brings the changes from
                       # the main branch into the branch you're in (feature1)
@@ -169,9 +195,20 @@ git merge origin/main # this does NOT change origin/main. it brings the changes 
 
 This step may create **Merge Conflicts**, which happens when the changes that someone has made in main contradict your changes. You will need to decide whether you will keep your own changes or other people's (or, if both options break the program, write the fix).
 
-Merge conflicts are more conveniently resolved using your IDE's tools, not in your terminal.
+Merge conflicts are more conveniently resolved using your IDE's tools, not in your terminal. This is the conflict when incorporating main into feature1 in the example:
 
-Very often, a merge will break your program **EVEN WITHOUT MERGE CONFLICTS**, whenever a change another person makes in the code doesn't contradict your own changes but they change the way the program works in a way you didn't expect. **RUN TESTS AND CHECKS**
+<img src="./images/readme4.png" width="40%">
+
+You can decide to resolve the conflict by selecting "Accept Current Change". Then, stage the changes like you would normally with
+```bash
+git add .
+git commit -m "merging main into feature1"
+```
+However, notice how this will create a bug in the code. It will no longer compile or run:
+
+<img src="./images/readme5.png" width="40%">
+
+**The variable you're using isn't declared!!** Very often, a merge will break your program **EVEN WITHOUT MERGE CONFLICTS**, whenever a change another person makes in the code doesn't contradict your own changes but they change the way the program works in a way you didn't expect. **RUN TESTS AND CHECKS AND FIX THE BUGS**
 
 You can repeat this step as main receives changes from other developers, so that your branch is up to date with what others are doing. If not, you will need to deal with all the changes later.
 
@@ -181,7 +218,7 @@ You can repeat this step as main receives changes from other developers, so that
 Finally, when your feature works and is ready to be implemented to the main branch, do a merge in the same way but from main.
 
 ```bash
-git checkout main
+git checkout main # go to the main branch
 git pull # bring the latest changes from the remote into local so you don't miss commits
 
 git merge feature1 # This CHANGES main. Make sure everything works before pushing
